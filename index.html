@@ -1,0 +1,82 @@
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<script>
+  var oldResult = '';
+  var rand = 'lightblue'; var randOld = '';
+  function loadlink(){
+    $.ajax({url: "https://script.googleusercontent.com/macros/echo?user_content_key=ax9cC_N7CSEf50RZdLNRrgq5rE_x4GorFGY_M6CJibSLqn8goY1pr1xPmW3-5JYw9xjkT0LkM721FS3vqysK2MB3Kg2hU4m4m5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnNcdwZhKoAHbNUyWLN8pw89JfM3wEOOo7GgHfwcZiH6Jy8DsN1Vc12eYraNpQXazxpDv8vzsCZhd&lib=MB5eOA8cD_VP6gkzsIZ5UePyyZHRGzCNE", success: function(result){
+      //console.log(result);
+      //console.log(oldResult);
+      if (result.localeCompare(oldResult) == 0) {
+        console.log('no change');
+      } else {
+        $("#side").empty();
+        console.log('changed');
+        var back = ["lightblue","lightpink","lightgray","white","yellow","lightcoral","lightgreen","lightsalmon"];
+        rand = back[Math.floor(Math.random() * back.length)];
+        if (rand == randOld) {
+          try {
+            rand = back[Math.floor(Math.random() * back.length) + 1]
+          }
+          catch(err) {
+            rand = back[0]
+          }
+        }
+        $("#side").css("background-color", rand)
+        randOld = rand;
+        
+      oldResult = result.slice();
+      var result = JSON.parse(result);
+      
+      //console.log(result[0]);
+      if (result[0] == 'rooms') {
+		for(let i = 0; i < result[1].length; i++){ 
+          var p = result[1][i];
+          var value = JSON.parse(p[1]);
+          $("#side").append('<a href="'+value[0]+'" target="search_iframe">'+p[0]+'</a>&nbsp;&nbsp;&nbsp;&nbsp;'+value[1]+'<br /><br />');
+          //console.log(p);
+        }
+      }
+      if (result[0] == 'mute') {
+        $("#side").append(result[1]);
+      }
+       if (result[0] == 'unmute') {
+        $("#side").append(result[1]);
+      }
+      if (result[0] == 'custom') {
+        console.log(result[1])
+        $("#side").append(result[1]);
+      }
+      if (result[0] == 'leave') {
+        $("#frame").attr('src','about:blank');
+        $("#side").html(result[1]);
+      }
+      }
+
+
+      console.log("done");
+    }});
+    //$('#side').load('https://script.googleusercontent.com/macros/echo?user_content_key=ax9cC_N7CSEf50RZdLNRrgq5rE_x4GorFGY_M6CJibSLqn8goY1pr1xPmW3-5JYw9xjkT0LkM721FS3vqysK2MB3Kg2hU4m4m5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnNcdwZhKoAHbNUyWLN8pw89JfM3wEOOo7GgHfwcZiH6Jy8DsN1Vc12eYraNpQXazxpDv8vzsCZhd&lib=MB5eOA8cD_VP6gkzsIZ5UePyyZHRGzCNE',function () {
+         //console.log("done");
+    //});
+}
+
+loadlink(); // This will run on page load
+setInterval(function(){
+    loadlink() // this will run after every 5 seconds
+}, 5000);
+</script>
+<iframe src="about:blank"  allow="camera *;microphone *" frameborder="0" name="search_iframe" id="frame" scrolling="yes"                           
+                                    style="overflow: hidden; height: 100%; 
+                                                width: 79%; float: left; " width="79%"
+                                   align="left">
+                                  </iframe>  
+                                        
+ <div
+                                    style="overflow: hidden; height: 100%; 
+                                                width: 19%; float: left; " width="19%"
+                                   align="left" id="side">
+   </div>
+
+                                    
